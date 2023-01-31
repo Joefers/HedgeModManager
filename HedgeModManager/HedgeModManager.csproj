@@ -28,6 +28,9 @@
     <DelaySign>false</DelaySign>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" PrivateAssets="All" Version="1.0.3" />
+  </ItemGroup>
+  <ItemGroup>
     <Reference Include="HtmlRenderer">
       <HintPath>Externals\HtmlRenderer.dll</HintPath>
     </Reference>
