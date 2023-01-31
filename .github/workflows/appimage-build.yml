@@ -41,7 +41,7 @@ jobs:
     - name: Dotnet Publish
       working-directory: ${{env.GITHUB_WORKSPACE}}
       # See https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-publish
-      run: dotnet publish -c ${{matrix.configuration}} ${{env.SOLUTION_FILE_PATH}} -r linux-x64 -o "AppImages/AppDir/usr/bin"
+      run: dotnet msbuild -m -property:Configuration=${{matrix.configuration}} -property:RuntimeIdentifiers=linux-x64 -property:OutputPath="AppImages/AppDir/usr/bin" ${{env.SOLUTION_FILE_PATH}}
 
     #- name: Package as AppImage
     #  working-directory: ${{env.GITHUB_WORKSPACE}}
