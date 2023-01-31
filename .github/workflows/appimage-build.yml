@@ -36,7 +36,9 @@ jobs:
         echo "deb https://download.mono-project.com/repo/ubuntu stable-focal main" | sudo tee /etc/apt/sources.list.d/mono-official-stable.list
         sudo apt update
         sudo apt install mono-devel
-        export FrameworkPathOverride=$(dirname $(which mono))/../lib/mono/4.5/
+        cd /usr/lib/mono
+        ls
+        export FrameworkPathOverride=/usr/lib/mono/4.5/
         echo $FrameworkPathOverride
 
     - name: Setup .NET Core SDK ${{ matrix.dotnet-version }}
@@ -52,7 +54,7 @@ jobs:
     - name: Dotnet Publish
       working-directory: ${{env.GITHUB_WORKSPACE}}
       # See https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-publish
-      run: dotnet msbuild -m -property:FrameworkPathOverride=$(dirname $(which mono))/../lib/mono/4.5/ -property:Configuration=${{matrix.configuration}} -property:RuntimeIdentifiers=linux-x64 -property:OutputPath="AppImages/AppDir/usr/bin" ${{env.SOLUTION_FILE_PATH}}
+      run: dotnet msbuild -m -property:FrameworkPathOverride=/usr/lib/mono/4.5/ -property:Configuration=${{matrix.configuration}} -property:RuntimeIdentifiers=linux-x64 -property:OutputPath="AppImages/AppDir/usr/bin" ${{env.SOLUTION_FILE_PATH}}
 
     #- name: Package as AppImage
     #  working-directory: ${{env.GITHUB_WORKSPACE}}
