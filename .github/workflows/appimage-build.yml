@@ -1,0 +1,54 @@
+name: AppImage Build
+
+on:
+  push:
+    branches:
+      - rewrite
+    paths-ignore:
+      # Ignore code files.
+      - 'HedgeModManager/Resources/Codesv2/**'
+
+env:
+  # Path to the solution file relative to the root of the project.
+  SOLUTION_FILE_PATH: .\HedgeModManager.sln
+
+jobs:
+  build:
+    name: ${{matrix.configuration}}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        configuration: [Debug, Release]
+        dotnet-version: ['3.0', '3.1.x', '5.0.x', '7' ] # TODO REVISE
+
+    steps:
+    - uses: actions/checkout@v2.5.0
+
+    - name: Add Git hash to resources
+      working-directory: ${{env.GITHUB_WORKSPACE}}
+      run: echo ${{github.sha}} > HedgeModManager/Resources/Version.txt
+
+    - name: Setup .NET Core SDK ${{ matrix.dotnet-version }}
+      # See https://github.com/actions/setup-dotnet/blob/main/README.md
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: ${{ matrix.dotnet-version }}
+
+    - name: Restore NuGet packages
+      working-directory: ${{env.GITHUB_WORKSPACE}}
+      run: nuget restore ${{env.SOLUTION_FILE_PATH}}
+
+    - name: Dotnet Publish
+      working-directory: ${{env.GITHUB_WORKSPACE}}
+      # See https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-publish
+      run: dotnet publish -c ${{matrix.configuration}} ${{env.SOLUTION_FILE_PATH}} -r linux-x64 -o "AppImages/AppDir/usr/bin"
+
+    #- name: Package as AppImage
+    #  working-directory: ${{env.GITHUB_WORKSPACE}}
+    #  Use the AppImage helper to package into an AppImage file.
+    #  run:   
+
+    - uses: actions/upload-artifact@v3.1.1
+      with:
+        name: HedgeModManager-${{matrix.configuration}}
+        path: ${{github.workspace}}
