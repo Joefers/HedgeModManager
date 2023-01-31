@@ -37,7 +37,8 @@ jobs:
         sudo apt update
         sudo apt install mono-devel
         which mono
-        export FrameworkPathOverride=/lib/mono/4.5
+        echo $(dirname $(which mono))
+        export FrameworkPathOverride=$(dirname $(which mono))/../lib/mono/4.5/
 
     - name: Setup .NET Core SDK ${{ matrix.dotnet-version }}
       # See https://github.com/actions/setup-dotnet/blob/main/README.md
