@@ -27,6 +27,14 @@ jobs:
     - name: Add Git hash to resources
       working-directory: ${{env.GITHUB_WORKSPACE}}
       run: echo ${{github.sha}} > HedgeModManager/Resources/Version.txt
+    
+    - name: Install Mono for .NET Framework
+      working-directory: ${{env.GITHUB_WORKSPACE}}
+      run: sudo apt install gnupg ca-certificates \
+           sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF \
+           echo "deb https://download.mono-project.com/repo/ubuntu stable-focal main" | sudo tee /etc/apt/sources.list.d/mono-official-stable.list \
+           sudo apt update \
+           sudo apt install mono-devel
 
     - name: Setup .NET Core SDK ${{ matrix.dotnet-version }}
       # See https://github.com/actions/setup-dotnet/blob/main/README.md
