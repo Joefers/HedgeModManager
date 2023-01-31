@@ -10,7 +10,7 @@ on:
 
 env:
   # Path to the solution file relative to the root of the project.
-  SOLUTION_FILE_PATH: .\HedgeModManager.sln
+  SOLUTION_FILE_PATH: ./HedgeModManager.sln
 
 jobs:
   build:
